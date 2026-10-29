@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="StrategyLens｜自然语言智能选股与策略解释器。检查条件、比较股票、追溯每一次筛选。">
+  <title>StrategyLens｜自然语言智能选股与策略解释器</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" type="module"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a href="/" class="brand" aria-label="StrategyLens 首页"><span class="brand-mark" aria-hidden="true">SL</span><strong>StrategyLens</strong></a>
+      <nav class="main-nav" aria-label="工作台导航"><a class="current" href="#strategy-title">条件筛选</a><a href="#results-title">筛选结果</a></nav>
+      <button id="data-status" class="data-badge" aria-haspopup="dialog">读取数据状态…</button>
+    </div>
+  </header>
+  <main class="shell workspace">
+    <div class="data-context" aria-label="数据范围与时点"><span id="universe-label" class="target-universe">目标范围：沪深300</span><span id="scope-description">实际数据范围待确认</span><span id="as-of" class="as-of">数据截至：未知</span></div>
+    <section class="command-section" aria-labelledby="workspace-title">
+      <div class="workspace-heading"><h1 id="workspace-title">策略筛选</h1><button id="compiler-status" class="text-button" aria-haspopup="dialog" title="查看当前输入能力">固定模板说明</button></div>
+      <form id="intent-form" class="intent-box">
+        <label id="intent-label" for="intent">示例策略</label>
+        <textarea id="intent" rows="2" maxlength="2000" required readonly aria-describedby="compiler-notice">经营改善、估值合理，同时最近走势不要太波动</textarea>
+        <div class="intent-actions"><span id="compiler-notice">当前为固定模板，不解析任意自然语言。载入后可直接编辑条件。</span><button id="compile" type="submit" class="primary" disabled>载入示例策略</button></div>
+      </form>
+    </section>
+    <section id="semantic-notice" class="inline-alert" aria-live="polite" hidden></section>
+    <div id="patch-tools" hidden><form id="patch-form" class="action-bar"><label for="patch-intent">修改当前策略</label><input id="patch-intent" maxlength="2000" required placeholder="例如：PE改成20，其他不变"><button class="secondary" type="submit">解析修改</button></form><div id="patch-preview" class="inline-alert" hidden><div id="patch-summary"></div><button id="apply-patch" class="secondary">确认应用修改</button></div></div>
+    <div id="message" class="inline-alert" role="alert" hidden></div>
+    <section class="strategy-section" aria-labelledby="strategy-title">
+      <div class="section-heading"><h2 id="strategy-title">筛选条件 <span id="condition-count" class="muted">尚未生成</span></h2><div class="section-tools"><span id="strategy-status" class="status">待生成</span><button id="add-condition" class="secondary small" disabled>＋ 添加条件</button></div></div>
+      <div id="conditions" class="condition-list"><p class="empty-conditions">载入示例策略后，可编辑阈值、比较关系和启用状态。</p></div>
+      <div id="conflicts" class="inline-alert" role="alert" hidden></div>
+      <div class="action-bar"><button id="execute" class="primary" disabled>执行筛选</button><span id="save-state" class="save-state" role="status">条件尚未生成</span><span class="action-divider"></span><span id="snapshot-state" class="snapshot-state">尚无数据快照</span><label class="refresh-option"><input type="checkbox" id="refresh-data">重新获取数据</label><span id="strategy-meta" class="revision">版本 —</span></div>
+    </section>
+    <section class="results-section" aria-labelledby="results-title">
+      <div class="results-heading"><h2 id="results-title">筛选结果 <small id="scope-caption">等待执行</small></h2><span id="result-version" class="muted">—</span></div>
+      <div id="stale" class="notice" role="status" hidden></div>
+      <div id="run-state" class="run-state" role="status" hidden></div>
+      <div id="diff" class="change-summary" hidden></div>
+      <div class="result-navigation"><div class="tabs" role="tablist" aria-label="股票筛选状态"><button id="tab-selected" class="tab active" role="tab" aria-selected="true" aria-controls="results-list" data-tab="selected">入选 <span id="count-selected">—</span></button><button id="tab-excluded" class="tab" role="tab" aria-selected="false" aria-controls="results-list" data-tab="excluded">排除 <span id="count-excluded">—</span></button><button id="tab-unknown" class="tab" role="tab" aria-selected="false" aria-controls="results-list" data-tab="unknown">数据不足 <span id="count-unknown">—</span></button></div><span class="table-hint">点击股票，查看逐条件证据</span></div>
+      <div id="results-list" class="table-viewport" role="tabpanel" tabindex="0" aria-labelledby="tab-selected"><div class="empty-results"><h3>等待筛选</h3><p>确认上方条件后执行。结果将在这里逐项展示。</p></div></div>
+      <footer class="result-footer"><span id="execution-meta">结果、数据来源与时间将随执行记录保存。</span><span>缺失 ≠ 不符合</span></footer>
+    </section>
+  </main>
+  <dialog id="drawer" class="evidence-drawer" aria-labelledby="drawer-title"><div class="drawer-header"><div><span class="eyebrow">条件判断依据</span><h2 id="drawer-title"></h2><div id="drawer-subtitle" class="muted"></div></div><button id="close-drawer" class="icon-button" aria-label="关闭详情">×</button></div><div id="drawer-content"></div></dialog>
+  <dialog id="condition-dialog" class="compact-dialog" aria-labelledby="add-title"><form id="add-form"><div class="dialog-heading"><h2 id="add-title">添加筛选条件</h2><button type="button" class="icon-button" data-close="condition-dialog" aria-label="关闭添加条件">×</button></div><label for="new-metric">指标</label><select id="new-metric"></select><div class="new-threshold"><div><label for="new-operator">关系</label><select id="new-operator"><option>&gt;</option><option>&gt;=</option><option selected>&lt;</option><option>&lt;=</option><option>==</option></select></div><div><label for="new-value">阈值 <span id="new-unit">倍</span></label><input id="new-value" type="number" step="any" required value="30"></div></div><p class="dialog-note">仅使用当前四项指标。相同指标可设置多个约束，冲突时会阻止执行。</p><button type="submit" class="primary">添加到当前策略</button></form></dialog>
+  <dialog id="condition-details" class="compact-dialog" aria-labelledby="origin-title"><div class="dialog-heading"><h2 id="origin-title">条件说明</h2><button class="icon-button" data-close="condition-details" aria-label="关闭条件说明">×</button></div><div id="origin-content"></div></dialog>
+  <dialog id="data-dialog" class="compact-dialog data-dialog" aria-labelledby="data-title"><div class="dialog-heading"><h2 id="data-title">数据来源与执行状态</h2><button class="icon-button" data-close="data-dialog" aria-label="关闭数据说明">×</button></div><div id="data-content"></div></dialog>
+</body>
+</html>

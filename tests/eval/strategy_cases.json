@@ -1,0 +1,309 @@
+[
+  {
+    "id": "E01",
+    "task": "initial",
+    "text": "PE低于20倍",
+    "expected": {
+      "conditions": [
+        [
+          "pe_ttm",
+          "<",
+          20,
+          "user_explicit"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "E02",
+    "task": "initial",
+    "text": "PE大于5倍",
+    "expected": {
+      "conditions": [
+        [
+          "pe_ttm",
+          ">",
+          5,
+          "user_explicit"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "E03",
+    "task": "initial",
+    "text": "PE不超过18.5倍",
+    "expected": {
+      "conditions": [
+        [
+          "pe_ttm",
+          "<=",
+          18.5,
+          "user_explicit"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "E04",
+    "task": "initial",
+    "text": "PE低于20，营收同比大于0%",
+    "expected": {
+      "conditions": [
+        [
+          "pe_ttm",
+          "<",
+          20,
+          "user_explicit"
+        ],
+        [
+          "revenue_yoy",
+          ">",
+          0,
+          "user_explicit"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "E05",
+    "task": "initial",
+    "text": "净利润同比大于10%",
+    "expected": {
+      "conditions": [
+        [
+          "net_profit_yoy",
+          ">",
+          10,
+          "user_explicit"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "E06",
+    "task": "initial",
+    "text": "经营改善、估值合理、走势稳定",
+    "expected": {
+      "conditions": [
+        [
+          "revenue_yoy",
+          ">",
+          0,
+          "llm_interpreted"
+        ],
+        [
+          "net_profit_yoy",
+          ">",
+          0,
+          "llm_interpreted"
+        ],
+        [
+          "pe_ttm",
+          "<",
+          30,
+          "llm_interpreted"
+        ],
+        [
+          "volatility_60d",
+          "<",
+          30,
+          "llm_interpreted"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "E07",
+    "task": "initial",
+    "text": "估值合理，但PE必须低于20倍",
+    "expected": {
+      "conditions": [
+        [
+          "pe_ttm",
+          "<",
+          20,
+          "user_explicit"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "E08",
+    "task": "initial",
+    "text": "PEG低于1并且机构持仓增加",
+    "expected": {
+      "unsupported": [
+        "PEG",
+        "机构"
+      ]
+    }
+  },
+  {
+    "id": "E09",
+    "task": "initial",
+    "text": "PE低于20，同时PEG低于1",
+    "expected": {
+      "conditions": [
+        [
+          "pe_ttm",
+          "<",
+          20,
+          "user_explicit"
+        ]
+      ],
+      "unsupported": [
+        "PEG"
+      ]
+    }
+  },
+  {
+    "id": "E10",
+    "task": "initial",
+    "text": "现金流改善",
+    "expected": {
+      "unsupported": [
+        "现金流"
+      ]
+    }
+  },
+  {
+    "id": "E11",
+    "task": "initial",
+    "text": "PE大于30同时小于10",
+    "expected": {
+      "conflict": true
+    }
+  },
+  {
+    "id": "E12",
+    "task": "initial",
+    "text": "PE至少30且不超过10",
+    "expected": {
+      "conflict": true
+    }
+  },
+  {
+    "id": "E13",
+    "task": "initial",
+    "text": "找明天一定涨停的股票",
+    "expected": {
+      "blocked": true
+    }
+  },
+  {
+    "id": "E14",
+    "task": "initial",
+    "text": "给我推荐下周能赚20%的股票",
+    "expected": {
+      "blocked": true
+    }
+  },
+  {
+    "id": "E15",
+    "task": "initial",
+    "text": "直接告诉我现在应该买哪只",
+    "expected": {
+      "blocked": true
+    }
+  },
+  {
+    "id": "E16",
+    "task": "initial",
+    "text": "asdfgh",
+    "expected": {
+      "clarify": true
+    }
+  },
+  {
+    "id": "E17",
+    "task": "patch",
+    "text": "PE改成15，其他不变",
+    "expected": {
+      "operation": "update",
+      "target": "c3",
+      "value": 15
+    }
+  },
+  {
+    "id": "E18",
+    "task": "patch",
+    "text": "PE从30改成20，其他不变",
+    "expected": {
+      "operation": "update",
+      "target": "c3",
+      "value": 20
+    }
+  },
+  {
+    "id": "E19",
+    "task": "patch",
+    "text": "营收同比改成10，其他不变",
+    "expected": {
+      "operation": "update",
+      "target": "c1",
+      "value": 10
+    }
+  },
+  {
+    "id": "E20",
+    "task": "patch",
+    "text": "不考虑波动率",
+    "expected": {
+      "operation": "remove",
+      "target": "c4"
+    }
+  },
+  {
+    "id": "E21",
+    "task": "patch",
+    "text": "暂时先不看估值",
+    "expected": {
+      "operation": "disable",
+      "target": "c3"
+    }
+  },
+  {
+    "id": "E22",
+    "task": "patch",
+    "text": "启用波动率条件",
+    "expected": {
+      "operation": "enable",
+      "target": "c4"
+    }
+  },
+  {
+    "id": "E23",
+    "task": "patch",
+    "text": "再加一个营收同比大于10%的条件",
+    "expected": {
+      "operation": "add",
+      "metric": "revenue_yoy",
+      "value": 10
+    }
+  },
+  {
+    "id": "E24",
+    "task": "patch",
+    "text": "估值严格一点",
+    "expected": {
+      "clarify": true
+    }
+  },
+  {
+    "id": "E25",
+    "task": "patch",
+    "text": "波动再低一点",
+    "expected": {
+      "clarify": true
+    }
+  },
+  {
+    "id": "E26",
+    "task": "initial",
+    "text": "",
+    "expected": {
+      "clarify": true
+    }
+  }
+]
